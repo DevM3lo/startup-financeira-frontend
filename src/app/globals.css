@@ -1,0 +1,13 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply transition-colors duration-200;
+  }
+  /* Quando estiver em dark mode, o fundo vira cinza escuro */
+  .dark body {
+    @apply bg-gray-900 text-white;
+  }
+}
