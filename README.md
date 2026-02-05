@@ -48,5 +48,5 @@ Pré-requisitos: Node.js instalado.
 
 1. **Clone o repositório**
    ```bash
-   git clone [https://github.com/devm3lo/keepcoin-web.git](https://github.com/devm3lo/keepcoin-web.git)
-   cd keepcoin-web
+   git clone [https://github.com/DevM3lo/startup-financeira-frontend.git](https://github.com/DevM3lo/startup-financeira-frontend.git)
+   cd startup-financeira-frontend
