@@ -13,7 +13,7 @@ export default function RegisterPage() {
     e.preventDefault();
     setLoading(true);
 
-    // Simula cadastro e joga pro dashboard
+    
     setTimeout(() => {
       router.push('/dashboard');
     }, 1500);

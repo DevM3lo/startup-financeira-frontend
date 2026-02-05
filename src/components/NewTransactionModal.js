@@ -1,31 +1,37 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { X } from 'lucide-react';
+import { X, Repeat } from 'lucide-react';
+import CurrencyInput from './CurrencyInput'; 
 
-export default function TransactionModal({ isOpen, onClose, onSave, initialData }) {
-  // Estados do formulário
+export default function NewTransactionModal({ isOpen, onClose, onSave, initialData }) {
   const [description, setDescription] = useState('');
-  const [amount, setAmount] = useState('');
+  const [amount, setAmount] = useState(''); 
   const [category, setCategory] = useState('');
   const [type, setType] = useState('expense');
   const [date, setDate] = useState('');
+  
+  
+  const [isRecurring, setIsRecurring] = useState(false);
+  const [frequency, setFrequency] = useState('monthly');
 
-  // Efeito: Quando o modal abre ou os dados mudam, preenche ou limpa o formulário
   useEffect(() => {
     if (initialData) {
-      // MODO EDIÇÃO: Preenche com os dados existentes
       setDescription(initialData.description);
-      setAmount(initialData.amount.toString());
+      setAmount(initialData.amount); 
       setCategory(initialData.category);
       setType(initialData.type);
       setDate(initialData.date);
+      
+      setIsRecurring(initialData.isRecurring || false);
+      setFrequency(initialData.frequency || 'monthly');
     } else {
-      // MODO CRIAÇÃO: Limpa tudo
       setDescription('');
       setAmount('');
       setCategory('');
       setType('expense');
       setDate('');
+      setIsRecurring(false);
+      setFrequency('monthly');
     }
   }, [initialData, isOpen]);
 
@@ -34,13 +40,16 @@ export default function TransactionModal({ isOpen, onClose, onSave, initialData 
   const handleSubmit = (e) => {
     e.preventDefault();
     onSave({
-      id: initialData?.id, // Mantém o ID se for edição
+      id: initialData?.id,
       description,
-      amount: parseFloat(amount),
+      amount: Number(amount), 
       category,
       type,
       date,
-      status: 'Concluído' // Padrão
+     
+      status: 'Pendente', 
+      isRecurring,
+      frequency: isRecurring ? frequency : null
     });
     onClose();
   };
@@ -49,7 +58,6 @@ export default function TransactionModal({ isOpen, onClose, onSave, initialData 
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 transition-opacity">
       <div className="bg-white dark:bg-keepBlue w-full max-w-md rounded-2xl shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-200 border border-gray-100 dark:border-keepBlue-light">
         
-        {/* Cabeçalho */}
         <div className="flex items-center justify-between p-6 border-b border-gray-100 dark:border-keepBlue-light bg-gray-50 dark:bg-keepBlue-dark">
           <h2 className="text-xl font-bold text-keepBlue dark:text-white">
             {initialData ? 'Editar Transação' : 'Nova Transação'}
@@ -59,10 +67,9 @@ export default function TransactionModal({ isOpen, onClose, onSave, initialData 
           </button>
         </div>
 
-        {/* Formulário */}
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
           
-          {/* Tipo (Receita / Despesa) */}
+          {/* Tipo */}
           <div className="grid grid-cols-2 gap-4">
             <button
               type="button"
@@ -95,23 +102,23 @@ export default function TransactionModal({ isOpen, onClose, onSave, initialData 
               type="text" 
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-200 dark:border-keepBlue-light rounded-lg focus:ring-2 focus:ring-coinGold outline-none bg-white dark:bg-keepBlue-dark dark:text-white"
+              className="w-full px-4 py-2 border border-gray-200 dark:border-keepBlue-light rounded-lg focus:ring-2 focus:ring-coinGold outline-none bg-white dark:bg-keepBlue-dark dark:text-white transition-colors"
               placeholder="Ex: Salário, Mercado..." 
             />
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Valor (R$)</label>
-              <input 
-                required
-                type="number" 
-                step="0.01"
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Valor</label>
+              
+              
+              <CurrencyInput 
                 value={amount}
-                onChange={(e) => setAmount(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-200 dark:border-keepBlue-light rounded-lg focus:ring-2 focus:ring-coinGold outline-none bg-white dark:bg-keepBlue-dark dark:text-white"
-                placeholder="0,00" 
+                onChange={(val) => setAmount(val)}
+                className="w-full px-4 py-2 border border-gray-200 dark:border-keepBlue-light rounded-lg focus:outline-none focus:ring-2 focus:ring-coinGold bg-white dark:bg-keepBlue-dark text-gray-900 dark:text-white transition-colors"
+                placeholder="R$ 0,00"
               />
+
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Data</label>
@@ -120,7 +127,7 @@ export default function TransactionModal({ isOpen, onClose, onSave, initialData 
                 type="date" 
                 value={date}
                 onChange={(e) => setDate(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-200 dark:border-keepBlue-light rounded-lg focus:ring-2 focus:ring-coinGold outline-none bg-white dark:bg-keepBlue-dark dark:text-white"
+                className="w-full px-4 py-2 border border-gray-200 dark:border-keepBlue-light rounded-lg focus:ring-2 focus:ring-coinGold outline-none bg-white dark:bg-keepBlue-dark dark:text-white transition-colors"
               />
             </div>
           </div>
@@ -130,7 +137,7 @@ export default function TransactionModal({ isOpen, onClose, onSave, initialData 
             <select 
               value={category}
               onChange={(e) => setCategory(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-200 dark:border-keepBlue-light rounded-lg focus:ring-2 focus:ring-coinGold outline-none bg-white dark:bg-keepBlue-dark dark:text-white"
+              className="w-full px-4 py-2 border border-gray-200 dark:border-keepBlue-light rounded-lg focus:ring-2 focus:ring-coinGold outline-none bg-white dark:bg-keepBlue-dark dark:text-white transition-colors"
             >
               <option value="" disabled>Selecione...</option>
               <option value="Alimentação">Alimentação</option>
@@ -143,22 +150,41 @@ export default function TransactionModal({ isOpen, onClose, onSave, initialData 
             </select>
           </div>
 
-          <div className="pt-4 flex gap-3">
-            <button 
-              type="button" 
-              onClick={onClose}
-              className="flex-1 px-4 py-2 border border-gray-200 dark:border-keepBlue-light rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-keepBlue-dark font-medium transition-colors"
-            >
-              Cancelar
-            </button>
-            <button 
-              type="submit" 
-              className="flex-1 px-4 py-2 bg-coinGold hover:bg-yellow-500 text-keepBlue rounded-lg font-bold shadow-md transition-colors"
-            >
-              Salvar
-            </button>
+          {/* CHECKBOX DE RECORRÊNCIA */}
+          <div className="pt-2 border-t border-gray-100 dark:border-keepBlue-light">
+             <div className="flex items-center gap-3 mb-2">
+                <input 
+                  type="checkbox" 
+                  id="recurring"
+                  checked={isRecurring}
+                  onChange={(e) => setIsRecurring(e.target.checked)}
+                  className="w-5 h-5 accent-coinGold rounded focus:ring-coinGold"
+                />
+                <label htmlFor="recurring" className="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center gap-2 cursor-pointer">
+                  <Repeat size={16} />
+                  Repetir lançamento
+                </label>
+             </div>
+             
+             {isRecurring && (
+               <div className="ml-8 animate-in slide-in-from-top-2 duration-200">
+                  <select 
+                    value={frequency}
+                    onChange={(e) => setFrequency(e.target.value)}
+                    className="w-full px-3 py-2 text-sm border border-gray-200 dark:border-keepBlue-light rounded-lg outline-none bg-gray-50 dark:bg-keepBlue-dark dark:text-white transition-colors"
+                  >
+                    <option value="weekly">Semanalmente</option>
+                    <option value="monthly">Mensalmente</option>
+                    <option value="yearly">Anualmente</option>
+                  </select>
+               </div>
+             )}
           </div>
 
+          <div className="pt-4 flex gap-3">
+            <button type="button" onClick={onClose} className="flex-1 px-4 py-2 border border-gray-200 dark:border-keepBlue-light rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-keepBlue-dark font-medium transition-colors">Cancelar</button>
+            <button type="submit" className="flex-1 px-4 py-2 bg-coinGold hover:bg-yellow-500 text-keepBlue rounded-lg font-bold shadow-md transition-colors">Salvar</button>
+          </div>
         </form>
       </div>
     </div>

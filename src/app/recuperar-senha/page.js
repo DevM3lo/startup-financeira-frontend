@@ -10,7 +10,7 @@ export default function ForgotPasswordPage() {
   const handleSubmit = (e) => {
     e.preventDefault();
     setLoading(true);
-    // Simula envio de email
+    
     setTimeout(() => {
       setLoading(false);
       setSent(true);
@@ -22,7 +22,7 @@ export default function ForgotPasswordPage() {
       <div className="max-w-md w-full bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-100 dark:border-gray-700 overflow-hidden transition-colors duration-300">
         
         {!sent ? (
-          /* Estado 1: Formulário */
+          
           <div className="p-8">
             <div className="text-center mb-8">
               <h1 className="text-2xl font-bold text-keepBlue dark:text-white transition-colors">Esqueceu a senha?</h1>
@@ -59,7 +59,7 @@ export default function ForgotPasswordPage() {
             </div>
           </div>
         ) : (
-          /* Estado 2: Sucesso */
+          
           <div className="p-8 text-center">
             {/* Ícone de Sucesso Dourado */}
             <div className="w-16 h-16 bg-yellow-100 dark:bg-yellow-900/20 text-coinGold rounded-full flex items-center justify-center mx-auto mb-6 transition-colors">

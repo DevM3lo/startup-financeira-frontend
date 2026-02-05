@@ -1,6 +1,7 @@
 'use client';
 import { useState, useEffect, useRef } from 'react';
 import { X, Palette, Target, Car, Home, Plane, Smartphone, GraduationCap, Gift, Wallet } from 'lucide-react';
+import CurrencyInput from './CurrencyInput'; 
 
 export default function NewGoalModal({ isOpen, onClose, onSave, initialData }) {
   const [title, setTitle] = useState('');
@@ -12,7 +13,7 @@ export default function NewGoalModal({ isOpen, onClose, onSave, initialData }) {
 
   const colorInputRef = useRef(null);
 
-  // Mapeamento de Ícones disponíveis para escolha
+
   const iconOptions = [
     { name: 'Target', label: 'Alvo', component: Target },
     { name: 'Car', label: 'Carro', component: Car },
@@ -25,19 +26,19 @@ export default function NewGoalModal({ isOpen, onClose, onSave, initialData }) {
   ];
 
   const colorOptions = [
-    { value: '#2563eb' }, // Azul
-    { value: '#22c55e' }, // Verde
-    { value: '#a855f7' }, // Roxo
-    { value: '#f97316' }, // Laranja
-    { value: '#ef4444' }, // Vermelho
-    { value: '#ec4899' }, // Rosa
+    { value: '#2563eb' }, 
+    { value: '#22c55e' }, 
+    { value: '#a855f7' }, 
+    { value: '#f97316' }, 
+    { value: '#ef4444' }, 
+    { value: '#ec4899' }, 
   ];
 
   useEffect(() => {
     if (initialData) {
       setTitle(initialData.title);
-      setCurrent(initialData.current.toString());
-      setTarget(initialData.target.toString());
+      setCurrent(initialData.current); 
+      setTarget(initialData.target);   
       setDate(initialData.date);
       setColor(initialData.color);
       setIconName(initialData.iconName || 'Target');
@@ -58,12 +59,12 @@ export default function NewGoalModal({ isOpen, onClose, onSave, initialData }) {
     onSave({
       id: initialData?.id,
       title,
-      current: parseFloat(current),
-      target: parseFloat(target),
+      current: Number(current), 
+      target: Number(target),   
       date,
       color,
       iconName,
-      completed: initialData?.completed || false // Mantém o status se já existir
+      completed: initialData?.completed || false 
     });
     onClose();
   };
@@ -98,26 +99,27 @@ export default function NewGoalModal({ isOpen, onClose, onSave, initialData }) {
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Valor Atual (R$)</label>
-              <input 
-                type="number" 
-                step="0.01"
+              
+              
+              <CurrencyInput 
                 value={current}
-                onChange={(e) => setCurrent(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-200 dark:border-keepBlue-light rounded-lg focus:ring-2 focus:ring-coinGold outline-none bg-white dark:bg-keepBlue-dark dark:text-white"
-                placeholder="0,00" 
+                onChange={(val) => setCurrent(val)}
+                className="w-full px-4 py-2 border border-gray-200 dark:border-keepBlue-light rounded-lg focus:outline-none focus:ring-2 focus:ring-coinGold bg-white dark:bg-keepBlue-dark text-gray-900 dark:text-white transition-colors"
+                placeholder="R$ 0,00"
               />
+
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Alvo Final (R$)</label>
-              <input 
-                required
-                type="number" 
-                step="0.01"
+              
+              
+              <CurrencyInput 
                 value={target}
-                onChange={(e) => setTarget(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-200 dark:border-keepBlue-light rounded-lg focus:ring-2 focus:ring-coinGold outline-none bg-white dark:bg-keepBlue-dark dark:text-white"
-                placeholder="10000,00" 
+                onChange={(val) => setTarget(val)}
+                className="w-full px-4 py-2 border border-gray-200 dark:border-keepBlue-light rounded-lg focus:outline-none focus:ring-2 focus:ring-coinGold bg-white dark:bg-keepBlue-dark text-gray-900 dark:text-white transition-colors"
+                placeholder="R$ 10.000,00"
               />
+
             </div>
           </div>
 

@@ -2,13 +2,14 @@
 import { useState } from 'react';
 import { Plus, Target, Car, Home, Plane, Smartphone, GraduationCap, Gift, Wallet, MoreHorizontal, Edit2, Trash2, CheckSquare, RotateCcw } from 'lucide-react';
 import NewGoalModal from '../../../components/NewGoalModal';
+import { useToast } from '../../../providers/ToastProvider'; 
 
-// Mapeamento para renderizar os ícones dinamicamente
+
 const iconMap = {
   Target, Car, Home, Plane, Smartphone, GraduationCap, Gift, Wallet
 };
 
-// Dados iniciais com cores HEX e nomes de ícones
+
 const initialGoals = [
   { id: 1, title: 'Reserva de Emergência', current: 5000, target: 15000, iconName: 'Target', color: '#22c55e', date: 'Dez 2024', completed: false },
   { id: 2, title: 'Trocar de Carro', current: 12000, target: 45000, iconName: 'Car', color: '#2563eb', date: 'Jul 2025', completed: false },
@@ -20,16 +21,23 @@ export default function GoalsPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [goals, setGoals] = useState(initialGoals);
   
-  // Estados de controle
+ 
   const [activeMenuId, setActiveMenuId] = useState(null);
   const [editingGoal, setEditingGoal] = useState(null);
+
+  
+  const { addToast } = useToast();
 
   const handleSaveGoal = (goalData) => {
     if (goalData.id) {
       setGoals((prev) => prev.map((g) => (g.id === goalData.id ? goalData : g)));
+      
+      addToast({ type: 'success', message: 'Meta atualizada com sucesso!' });
     } else {
       const newGoal = { ...goalData, id: Date.now() };
       setGoals([...goals, newGoal]);
+      
+      addToast({ type: 'success', message: 'Nova meta criada!' });
     }
     setIsModalOpen(false);
     setEditingGoal(null);
@@ -38,12 +46,21 @@ export default function GoalsPage() {
   const handleDelete = (id) => {
     setGoals(goals.filter((g) => g.id !== id));
     setActiveMenuId(null);
+    
+    addToast({ type: 'info', message: 'Meta removida.' });
   };
 
   const handleToggleComplete = (goal) => {
     const updatedGoal = { ...goal, completed: !goal.completed };
     setGoals((prev) => prev.map((g) => (g.id === goal.id ? updatedGoal : g)));
     setActiveMenuId(null);
+
+    
+    if (updatedGoal.completed) {
+      addToast({ type: 'success', message: 'Parabéns! Meta concluída! 🚀' });
+    } else {
+      addToast({ type: 'info', message: 'Meta reaberta.' });
+    }
   };
 
   const handleOpenEdit = (goal) => {
@@ -82,7 +99,7 @@ export default function GoalsPage() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {goals.map((goal) => {
-          // Se estiver completada, força 100%
+          
           const percentage = goal.completed ? 100 : Math.min((goal.current / goal.target) * 100, 100);
           const IconComponent = iconMap[goal.iconName] || Target;
           

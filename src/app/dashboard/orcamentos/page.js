@@ -2,8 +2,9 @@
 import { useState } from 'react';
 import { Plus, AlertCircle, CheckCircle2, MoreHorizontal, Edit2, Trash2 } from 'lucide-react';
 import NewBudgetModal from '../../../components/NewBudgetModal';
+import { useToast } from '../../../providers/ToastProvider'; // <--- 1. IMPORTAR O TOAST
 
-// ATENÇÃO: Agora usamos HEXADECIMAL nas cores
+
 const initialBudgets = [
   { id: 1, category: 'Alimentação', spent: 1250.00, limit: 1500.00, color: '#f97316' }, // Laranja
   { id: 2, category: 'Moradia', spent: 2200.00, limit: 2200.00, color: '#2563eb' }, // Azul
@@ -16,15 +17,22 @@ export default function BudgetsPage() {
   const [budgets, setBudgets] = useState(initialBudgets);
   const [activeMenuId, setActiveMenuId] = useState(null);
   const [editingBudget, setEditingBudget] = useState(null);
+  
+ 
+  const { addToast } = useToast();
 
   const handleSaveBudget = (budgetData) => {
     if (budgetData.id) {
       setBudgets((prev) => 
         prev.map((b) => (b.id === budgetData.id ? budgetData : b))
       );
+      
+      addToast({ type: 'success', message: 'Orçamento atualizado com sucesso!' });
     } else {
       const newBudget = { ...budgetData, id: Date.now() };
       setBudgets([...budgets, newBudget]);
+      
+      addToast({ type: 'success', message: 'Novo orçamento criado!' });
     }
     setIsModalOpen(false);
     setEditingBudget(null);
@@ -33,6 +41,8 @@ export default function BudgetsPage() {
   const handleDelete = (id) => {
     setBudgets(budgets.filter((b) => b.id !== id));
     setActiveMenuId(null);
+    
+    addToast({ type: 'info', message: 'Orçamento removido.' });
   };
 
   const handleOpenEdit = (budget) => {
@@ -130,7 +140,6 @@ export default function BudgetsPage() {
               <div className="w-full h-3 bg-gray-100 dark:bg-keepBlue-dark rounded-full overflow-hidden transition-colors">
                 <div 
                   className="h-full rounded-full transition-all duration-500"
-                  // AQUI ESTÁ O SEGREDO: Usamos style inline para a cor HEX
                   style={{ 
                     width: `${percentage}%`,
                     backgroundColor: isOverBudget ? '#ef4444' : budget.color 

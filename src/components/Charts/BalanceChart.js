@@ -1,6 +1,6 @@
 'use client';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import { useTheme } from '../../providers/ThemeProvider'; // <--- 1. Importe o Hook
+import { useTheme } from '../../providers/ThemeProvider'; 
 
 const data = [
   { name: 'Jan', receitas: 4000, despesas: 2400 },
@@ -12,14 +12,14 @@ const data = [
 ];
 
 export default function BalanceChart() {
-  const { theme } = useTheme(); // <--- 2. Pega o tema atual
+  const { theme } = useTheme(); 
   const isDark = theme === 'dark';
 
-  // 3. Define as cores baseado no tema
-  const gridColor = isDark ? '#374151' : '#eee'; // Linhas da grade
-  const textColor = isDark ? '#9ca3af' : '#888'; // Texto dos eixos
-  const tooltipBg = isDark ? '#1f2937' : '#fff'; // Fundo do tooltip
-  const tooltipBorder = isDark ? '#374151' : '#f3f4f6'; // Borda do tooltip
+  
+  const gridColor = isDark ? '#374151' : '#eee'; 
+  const textColor = isDark ? '#9ca3af' : '#888'; 
+  const tooltipBg = isDark ? '#1f2937' : '#fff'; 
+  const tooltipBorder = isDark ? '#374151' : '#f3f4f6'; 
 
   return (
     <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 h-96 transition-colors">

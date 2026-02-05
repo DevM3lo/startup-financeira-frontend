@@ -1,18 +1,19 @@
 'use client';
 import { useState, useEffect, useRef } from 'react';
 import { X, Palette } from 'lucide-react';
+import CurrencyInput from './CurrencyInput'; 
 
 export default function NewBudgetModal({ isOpen, onClose, onSave, initialData }) {
   const [category, setCategory] = useState('');
   const [limit, setLimit] = useState('');
   const [spent, setSpent] = useState('');
-  // Agora o estado inicial é um HEX (Azul padrão)
+  
   const [color, setColor] = useState('#2563eb');
   
-  // Ref para acionar o input de cor escondido
+  
   const colorInputRef = useRef(null);
 
-  // Cores pré-definidas agora em HEX para facilitar
+  
   const colorOptions = [
     { name: 'Azul', value: '#2563eb' },
     { name: 'Verde', value: '#22c55e' },
@@ -25,13 +26,13 @@ export default function NewBudgetModal({ isOpen, onClose, onSave, initialData })
   useEffect(() => {
     if (initialData) {
       setCategory(initialData.category);
-      setLimit(initialData.limit.toString());
-      setSpent(initialData.spent.toString());
-      setColor(initialData.color); // Carrega a cor salva (seja preset ou custom)
+      setLimit(initialData.limit); 
+      setSpent(initialData.spent); 
+      setColor(initialData.color); 
     } else {
       setCategory('');
       setLimit('');
-      setSpent('0');
+      setSpent(''); 
       setColor('#2563eb');
     }
   }, [initialData, isOpen]);
@@ -43,9 +44,9 @@ export default function NewBudgetModal({ isOpen, onClose, onSave, initialData })
     onSave({
       id: initialData?.id,
       category,
-      limit: parseFloat(limit),
-      spent: parseFloat(spent),
-      color // Envia o código HEX
+      limit: Number(limit),
+      spent: Number(spent),
+      color 
     });
     onClose();
   };
@@ -72,7 +73,7 @@ export default function NewBudgetModal({ isOpen, onClose, onSave, initialData })
               type="text" 
               value={category}
               onChange={(e) => setCategory(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-200 dark:border-keepBlue-light rounded-lg focus:ring-2 focus:ring-coinGold outline-none bg-white dark:bg-keepBlue-dark dark:text-white"
+              className="w-full px-4 py-2 border border-gray-200 dark:border-keepBlue-light rounded-lg focus:ring-2 focus:ring-coinGold outline-none bg-white dark:bg-keepBlue-dark dark:text-white transition-colors"
               placeholder="Ex: Viagens, Mercado..." 
             />
           </div>
@@ -80,26 +81,27 @@ export default function NewBudgetModal({ isOpen, onClose, onSave, initialData })
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Limite (R$)</label>
-              <input 
-                required
-                type="number" 
-                step="0.01"
+              
+             
+              <CurrencyInput
                 value={limit}
-                onChange={(e) => setLimit(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-200 dark:border-keepBlue-light rounded-lg focus:ring-2 focus:ring-coinGold outline-none bg-white dark:bg-keepBlue-dark dark:text-white"
-                placeholder="1000,00" 
+                onChange={(val) => setLimit(val)}
+                className="w-full px-4 py-2 border border-gray-200 dark:border-keepBlue-light rounded-lg focus:outline-none focus:ring-2 focus:ring-coinGold bg-white dark:bg-keepBlue-dark text-gray-900 dark:text-white transition-colors"
+                placeholder="R$ 0,00"
               />
+
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Gasto Atual (R$)</label>
-              <input 
-                type="number" 
-                step="0.01"
+              
+             
+              <CurrencyInput
                 value={spent}
-                onChange={(e) => setSpent(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-200 dark:border-keepBlue-light rounded-lg focus:ring-2 focus:ring-coinGold outline-none bg-white dark:bg-keepBlue-dark dark:text-white"
-                placeholder="0,00" 
+                onChange={(val) => setSpent(val)}
+                className="w-full px-4 py-2 border border-gray-200 dark:border-keepBlue-light rounded-lg focus:outline-none focus:ring-2 focus:ring-coinGold bg-white dark:bg-keepBlue-dark text-gray-900 dark:text-white transition-colors"
+                placeholder="R$ 0,00"
               />
+
             </div>
           </div>
 
@@ -113,7 +115,7 @@ export default function NewBudgetModal({ isOpen, onClose, onSave, initialData })
                   key={opt.value}
                   type="button"
                   onClick={() => setColor(opt.value)}
-                  // Aplica a cor via style inline
+                  
                   style={{ backgroundColor: opt.value }}
                   className={`w-8 h-8 rounded-full transition-transform hover:scale-110 border border-gray-200 dark:border-gray-700 ${
                     color === opt.value ? 'ring-2 ring-offset-2 ring-coinGold dark:ring-offset-keepBlue' : ''

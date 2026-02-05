@@ -1,13 +1,12 @@
-// Isso simula o JSON que seu Java vai retornar no futuro
 export const dashboardData = {
   saldo: 12450.75,
   receitas: {
     total: 7800.00,
-    variacao: 5.2 // +5.2% vs mês anterior
+    variacao: 5.2 
   },
   despesas: {
     total: 4150.25,
-    variacao: 8.1 // +8.1% vs mês anterior
+    variacao: 8.1 
   },
   transacoesRecentes: [
     { id: 1, titulo: "Supermercado", data: "15 Jun, 2024", valor: -254.90, tipo: "despesa", icone: "carrinho" },

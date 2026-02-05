@@ -16,7 +16,7 @@ export default function ReportsPage() {
   const { theme } = useTheme(); 
   const isDark = theme === 'dark';
 
-  // CORES DO TEMA KEEPCOIN (HEX)
+
   const colors = {
     gold: '#EAB308',
     green: '#22C55E',

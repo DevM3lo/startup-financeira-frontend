@@ -1,6 +1,6 @@
 'use client';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts';
-import { useTheme } from '../../providers/ThemeProvider'; // <--- 1. Import do Hook
+import { useTheme } from '../../providers/ThemeProvider'; 
 
 const data = [
   { name: 'Alimentação', value: 400 },
@@ -9,16 +9,16 @@ const data = [
   { name: 'Transporte', value: 200 },
 ];
 
-const COLORS = ['#16a34a', '#22c55e', '#86efac', '#bbf7d0']; // Tons de verde
+const COLORS = ['#16a34a', '#22c55e', '#86efac', '#bbf7d0']; 
 
 export default function CategoryDonut() {
-  const { theme } = useTheme(); // <--- 2. Pega o tema
+  const { theme } = useTheme(); 
   const isDark = theme === 'dark';
 
-  // 3. Define cores dinâmicas para Tooltip e Legenda
+  
   const tooltipBg = isDark ? '#1f2937' : '#fff'; 
   const tooltipBorder = isDark ? '#374151' : '#f3f4f6';
-  const textColor = isDark ? '#e5e7eb' : '#374151'; // Cor do texto da legenda e tooltip
+  const textColor = isDark ? '#e5e7eb' : '#374151'; 
 
   return (
     <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 h-96 transition-colors">
@@ -32,7 +32,7 @@ export default function CategoryDonut() {
               outerRadius={80}
               paddingAngle={5}
               dataKey="value"
-              stroke={isDark ? '#1f2937' : '#fff'} // Borda das fatias combinando com o fundo
+              stroke={isDark ? '#1f2937' : '#fff'} 
               strokeWidth={2}
             >
               {data.map((entry, index) => (
@@ -55,7 +55,7 @@ export default function CategoryDonut() {
               verticalAlign="bottom" 
               height={36} 
               iconType="circle" 
-              wrapperStyle={{ color: textColor }} // Força a cor do texto da legenda
+              wrapperStyle={{ color: textColor }} 
             />
           </PieChart>
         </ResponsiveContainer>
